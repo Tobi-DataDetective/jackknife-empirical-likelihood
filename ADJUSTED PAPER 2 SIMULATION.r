@@ -1,25 +1,23 @@
 library(MASS)
 library(emplik)
 library(kedd)
+library(progress)  # For progress bar
 
-######### PARAMETERS########################
-
-
-#n_values <- c(300, 500, 1000, 2000)  # Updated sample sizes
-#rho <- c(-0.9, -0.5, 0, 0.75)  # Updated correlation coefficients
-#iter <- 1000  # Number of iterations
-
-n_values <- c(10, 15, 20, 25)  # Updated sample sizes
+n_values <- c(300, 500, 1000, 2000)  # Updated sample sizes
 rho <- c(-0.9, -0.5, 0, 0.75)  # Updated correlation coefficients
-iter <- 5  # Number of iterations
+iter <- 1000  # Number of iterations
 
-########Define Matrix of Results###################
+#n_values <- c(10, 15, 20, 25)  # Updated sample sizes
+#rho <- c(-0.9, -0.5, 0, 0.75)  # Updated correlation coefficients
+#iter <- 5  # Number of iterations
+
+
+########Define Matrix of Results ###################
 results <- matrix(NA, nrow = length(rho), ncol = 4)
 colnames(results) <- c("Lower Bound", "Upper Bound", "CI Length", "Coverage Probability")
 rownames(results) <- paste("Rho =", rho)
 
-########## FUNCTIONS#########################
-
+########## FUNCTIONS #########################
 get.NWK <- function(x, u, small.u) {
   bw <- density(u, kernel = c("epanechnikov"))$bw
   KX <- vector()
@@ -43,7 +41,13 @@ findci <- function(x.vector) {
   return(list(Up = U, Low = L))
 }
 
-############SIMULATION#######################
+############ SIMULATION #######################
+# Initialize progress bar
+total_steps <- length(rho) * iter
+pb <- progress_bar$new(
+  format = "  Progress [:bar] :percent | Elapsed: :elapsed | ETA: :eta",
+  total = total_steps, clear = FALSE, width = 60
+)
 
 for (ii in seq_along(rho)) {
   
@@ -53,9 +57,9 @@ for (ii in seq_along(rho)) {
   length.jel <- vector()
   
   for (jj in 1:iter) {
+    pb$tick()  # Update the progress bar
     
-    ####### DATA GENERATION#####################
-    
+    ####### DATA GENERATION #####################
     n <- n_values[((ii - 1) %% length(n_values)) + 1]  # Corrected index
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
     data <- mvrnorm(n, mu = c(0, 0), Sigma = sigma)
@@ -63,18 +67,15 @@ for (ii in seq_along(rho)) {
     
     U <- runif(n, 0, 1)  # Adjusted U to Uniform(0, 1)
     
-    ########DISTORTING FUNCTION#################
-    
+    ######## DISTORTING FUNCTION #################
     psi_U <- 1.25 - 3 * (U - 0.5)^2
     phi_U <- 1 + 0.5 * cos(2 * pi * U)
     
-    ###### OBSERVED DATA#########################
-    
+    ###### OBSERVED DATA #########################
     X_tilde <- psi_U * data[, "X"]
     Y_tilde <- phi_U * data[, "Y"]
     
-    #######CALCULATING ESTIMATORS##############
-    
+    ####### CALCULATING ESTIMATORS ##############
     e.X.est <- sapply(1:n, function(j) X_tilde[j] / get.NWK(X_tilde, U, U[j]))
     e.Y.est <- sapply(1:n, function(j) Y_tilde[j] / get.NWK(Y_tilde, U, U[j]))
     
@@ -83,8 +84,7 @@ for (ii in seq_along(rho)) {
     sig.e.Y <- mean(e.Y.est^2) - mean(e.Y.est)^2
     rho.e.est <- cov.e.est / sqrt(sig.e.X * sig.e.Y)
     
-    ############JACKKNIFING#######################
-    
+    ############ JACKKNIFING #######################
     rho.j <- numeric(n)
     for (j in 1:n) {
       jack_X <- X_tilde[-j]
@@ -105,8 +105,7 @@ for (ii in seq_along(rho)) {
       rho.j[j] <- n * rho.e.est - (n - 1) * (cov.jack / sqrt(sig.jack.X * sig.jack.Y))
     }
     
-    #########JACKKNIFE EMPIRICAL LIKELIHOOD#################
-    
+    ######### JACKKNIFE EMPIRICAL LIKELIHOOD #################
     ci.jel <- findci(rho.j)
     upper.jel[jj] <- ci.jel$Up
     lower.jel[jj] <- ci.jel$Low
