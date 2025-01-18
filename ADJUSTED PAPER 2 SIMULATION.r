@@ -4,6 +4,11 @@ library(kedd)
 
 ######### PARAMETERS########################
 
+
+#n_values <- c(300, 500, 1000, 2000)  # Updated sample sizes
+#rho <- c(-0.9, -0.5, 0, 0.75)  # Updated correlation coefficients
+#iter <- 1000  # Number of iterations
+
 n_values <- c(10, 15, 20, 25)  # Updated sample sizes
 rho <- c(-0.9, -0.5, 0, 0.75)  # Updated correlation coefficients
 iter <- 5  # Number of iterations
