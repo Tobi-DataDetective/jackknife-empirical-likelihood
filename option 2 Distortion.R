@@ -1,11 +1,10 @@
-# Approved
 library(MASS)
 library(emplik)
 library(kedd)
 
 ######### PARAMETERS########################
 
-n = 100  # Further increased sample size
+n = 100  # Increased sample size
 rho = c(-0.9, -0.5, 0, 0.5, 0.9)
 iter = 100  # Increased iterations
 
@@ -20,7 +19,7 @@ results = matrix(NA, nrow = 5, ncol = 4)
 ########## FUNCTIONS#########################
 
 get.NWK = function(x, u, small.u){
-  bw = density(u, kernel = c("epanechnikov"))$bw * 1.2  # Adjusted bandwidth
+  bw = density(u, kernel = c("epanechnikov"))$bw
   KX = vector()
   K = vector()
   for(j in 1:length(u)){
@@ -62,8 +61,8 @@ for (ii in 1:5){
     
     ########DISTORTING FUNCTION#################
     
-    phi_X = 1 + 0.4 * abs(U)  # Range: [1, 1.4], slightly reduced distortion
-    phi_Y = 1 + 0.2 * abs(U)  # Range: [1, 1.2], slightly reduced distortion
+    phi_X = exp(0.3 * sin(2 * pi * U))  # Range: [0.741, 1.35]
+    phi_Y = exp(0.2 * U)  # Range: [0.819, 1.221]
     
     ######OBSERVED DATA#########################
     
@@ -125,7 +124,7 @@ for (ii in 1:5){
     upper.jel[jj] = ci.jel$Up
     lower.jel[jj] = ci.jel$Low
     length.jel[jj] = upper.jel[jj] - lower.jel[jj]
-    coverage.jel[jj] = il.j < qchisq(0.975, 1)  # Adjusted for 95%+ coverage
+    coverage.jel[jj] = il.j < qchisq(0.90, 1)  # Adjusted for 90% coverage
   }
   results[ii, 1] = mean(lower.jel)
   results[ii, 2] = mean(upper.jel)

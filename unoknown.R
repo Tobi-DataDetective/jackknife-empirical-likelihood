@@ -1,7 +1,4 @@
 # #example 1 AJEL
-install.packages('emplik')
-install.packages('kedd')
-
 library(MASS)
 library(emplik)
 library(kedd)
@@ -10,10 +7,8 @@ library(kedd)
 
 n = 50
 # rho = c(-0.9, -0.5, 0, 0.5, 0.75)
-rho = c(-0.95, -0.9, -0.85, -0.8, -0.75, -0.7, -0.65, -0.6, -0.55, -0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+rho = c(-0.6, -0.5, 0, 0.5, 0.6)
 iter = 100
-
-########Define Matrix of Results###################
 
 ########Define Matrix of Results###################
 
@@ -21,8 +16,7 @@ coverage.jel = vector()
 length.jel = vector()
 upper.jel = vector()
 lower.jel = vector()
-results = matrix(NA, nrow = length(rho), ncol = 4)
-
+results = matrix(NA, nrow = 5, ncol = 4)
 
 ########## FUNCTIONS#########################
 
@@ -56,15 +50,13 @@ findci <- function(x.vector, AJEL = FALSE) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:length(rho)){
-  
+for (ii in 1:5){
   for (jj in 1:iter){
     
     ####### DATA GENERATION#####################
     
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
-    data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
-    
+    data <- mvrnorm(n, mu = c(-1,1), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
     U = runif(n,0,1)
@@ -172,10 +164,8 @@ library(kedd)
 
 n = 50
 # rho = c(-0.9, -0.5, 0, 0.5, 0.75)
-rho = c(-0.95, -0.9, -0.85, -0.8, -0.75, -0.7, -0.65, -0.6, -0.55, -0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+rho = c(-0.6, -0.5, 0, 0.5, 0.6)
 iter = 100
-
-########Define Matrix of Results###################
 
 ########Define Matrix of Results###################
 
@@ -183,8 +173,7 @@ coverage.jel = vector()
 length.jel = vector()
 upper.jel = vector()
 lower.jel = vector()
-results = matrix(NA, nrow = length(rho), ncol = 4)
-
+results = matrix(NA, nrow = 5, ncol = 4)
 
 ########## FUNCTIONS#########################
 
@@ -214,14 +203,13 @@ findci <- function(x.vector) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:length(rho)){
-  
+for (ii in 1:5){
   for (jj in 1:iter){
     
     ####### DATA GENERATION#####################
     
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
-    data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
+    data <- mvrnorm(n, mu = c(-1,1), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
     U = runif(n,0,1)
@@ -327,9 +315,8 @@ library(kedd)
 
 n = 50
 # rho = c(-0.9, -0.5, 0, 0.5, 0.75)
-rho = c(-0.95, -0.9, -0.85, -0.8, -0.75, -0.7, -0.65, -0.6, -0.55, -0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+rho = c(-0.6, -0.5, 0, 0.5, 0.6)
 iter = 100
-########Define Matrix of Results###################
 
 ########Define Matrix of Results###################
 
@@ -337,8 +324,7 @@ coverage.jel = vector()
 length.jel = vector()
 upper.jel = vector()
 lower.jel = vector()
-results = matrix(NA, nrow = length(rho), ncol = 4)
-
+results = matrix(NA, nrow = 5, ncol = 4)
 
 ########## FUNCTIONS#########################
 
@@ -368,14 +354,13 @@ findci <- function(x.vector) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:length(rho)){
-  
+for (ii in 1:5){
   for (jj in 1:iter){
     
     ####### DATA GENERATION#####################
     
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
-    data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
+    data <- mvrnorm(n, mu = c(-1,1), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
     U = runif(n,0,1)
@@ -482,10 +467,8 @@ library(kedd)
 
 n = 50
 # rho = c(-0.9, -0.5, 0, 0.5, 0.75)
-rho = c(-0.95, -0.9, -0.85, -0.8, -0.75, -0.7, -0.65, -0.6, -0.55, -0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+rho = c(-0.6, -0.5, 0, 0.5, 0.6)
 iter = 100
-
-########Define Matrix of Results###################
 
 ########Define Matrix of Results###################
 
@@ -493,8 +476,7 @@ coverage.jel = vector()
 length.jel = vector()
 upper.jel = vector()
 lower.jel = vector()
-results = matrix(NA, nrow = length(rho), ncol = 4)
-
+results = matrix(NA, nrow = 5, ncol = 4)
 
 ########## FUNCTIONS#########################
 
@@ -528,14 +510,13 @@ findci <- function(x.vector) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:length(rho)){
-  
+for (ii in 1:5){
   for (jj in 1:iter){
     
     ####### DATA GENERATION#####################
     
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
-    data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
+    data <- mvrnorm(n, mu = c(-1,1), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
     U = runif(n,0,1)
@@ -640,10 +621,8 @@ library(kedd)
 
 n = 50
 # rho = c(-0.9, -0.5, 0, 0.5, 0.75)
-rho = c(-0.95, -0.9, -0.85, -0.8, -0.75, -0.7, -0.65, -0.6, -0.55, -0.5, -0.45, -0.4, -0.35, -0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)
+rho = c(-0.6, -0.5, 0, 0.5, 0.6)
 iter = 100
-
-########Define Matrix of Results###################
 
 ########Define Matrix of Results###################
 
@@ -651,8 +630,7 @@ coverage.jel = vector()
 length.jel = vector()
 upper.jel = vector()
 lower.jel = vector()
-results = matrix(NA, nrow = length(rho), ncol = 4)
-
+results = matrix(NA, nrow = 5, ncol = 4)
 
 ########## FUNCTIONS#########################
 
@@ -686,14 +664,13 @@ findci <- function(x.vector) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:length(rho)){
-  
+for (ii in 1:5){
   for (jj in 1:iter){
     
     ####### DATA GENERATION#####################
     
     sigma <- matrix(c(1, rho[ii], rho[ii], 1), nrow = 2)
-    data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
+    data <- mvrnorm(n, mu = c(-1,1), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
     U = runif(n,0,1)

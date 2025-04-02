@@ -6,7 +6,7 @@ library(kedd)
 
 n = 50
 rho = c(-0.9, -0.5, 0, 0.5, 0.9)
-iter = 2000
+iter = 50
 
 ########Define Matrix of Results###################
 

@@ -1,4 +1,6 @@
-# Multiplicative Distortion Pure Brian
+
+# Approved Uniform
+
 
 library(MASS)
 library(emplik)
@@ -6,11 +8,11 @@ library(kedd)
 
 ######### PARAMETERS########################
 
-n = 50
-# rho = c(-0.9, -0.5, 0, 0.5, 0.9)
-rho = c(-0.6, -0.5, 0, 0.5, 0.6)
+n = 75
+rho = c(-0.9, -0.7, -0.5, -0.3, 0, 0.3, 0.5, 0.7, 0.9)
 iter = 100
-# iter = 2000
+
+
 ########Define Matrix of Results###################
 
 coverage.jel = vector()
@@ -51,7 +53,8 @@ findci <- function(x.vector, AJEL = FALSE) {
 
 ############ITERATIONS#######################
 
-for (ii in 1:5){
+# for (ii in 1:5){
+for (ii in 1:length(rho)){
   
   for (jj in 1:iter){
     
@@ -61,16 +64,22 @@ for (ii in 1:5){
     data <- mvrnorm(n, mu = c(0,0), Sigma = sigma ) 
     colnames(data) <- c("X","Y")
     
-    U = runif(n,-1,1)
+    U = rbeta(n, 2, 5)
+    U = scale(U, center = TRUE, scale = FALSE)  # Centered but not scaled
+    
+    
     
     ########DISTORTING FUNCTION#################
+    
+    #phi_X = 0.2*U+log(0.4/(exp(0.2)-exp(-0.2)))
+    #phi_Y = log(U^2+1/3)
     
     phi_X = log(1+0.75*sin(2*pi*U))
     phi_Y = -U + log(2/(exp(1)-exp(-1)))
     
-    ######OBSERVED DATA WITH MULTIPLICATIVE DISTORTION###########
+    ######OBSERVED DATA#########################
     
-    xy.obs <- data * cbind(phi_X, phi_Y)
+    xy.obs <- data + cbind (phi_X,phi_Y)
     
     #######CALCULATING ESTIMATORS##############
     
@@ -95,6 +104,8 @@ for (ii in 1:5){
     ############JACKKNIFING#######################
     
     rho.j=vector()
+    Eix.j = vector()
+    Eiy.j = vector()
     
     for (j in 1:n){
       
@@ -110,6 +121,7 @@ for (ii in 1:5){
         Eiy.j[k] =xy.jack[,2][k]- log(get.NWK(xy.jack[,2],U.jack,U.jack[k]))+log(mean(exp(xy.jack[,2])))
       }
       
+      
       cov.e.est.jack = mean(Eix.j*Eiy.j) - mean(Eix.j)*mean(Eiy.j)
       sig.e.X.jack = mean(Eix.j*Eix.j) - mean(Eix.j)*mean(Eix.j)
       sig.e.Y.jack = mean(Eiy.j*Eiy.j) - mean(Eiy.j)*mean(Eiy.j)
@@ -118,6 +130,8 @@ for (ii in 1:5){
       
       rho.j[j]=n*rho.e.est-(n-1)*rho.e.est.jack
     }
+    
+    
     
     #########JACKKNIFE EMPIRICAL LIKELIHOOD#################
     
@@ -132,7 +146,6 @@ for (ii in 1:5){
     length.jel[jj] = upper.jel[jj] - lower.jel[jj]
     coverage.jel[jj] = il.j < 1.96^2
   }
-  
   results[ii,1] = mean(lower.jel)
   results[ii,2] = mean(upper.jel)
   results[ii,3] = mean(length.jel)
@@ -140,12 +153,3 @@ for (ii in 1:5){
 }
 
 results
-
-
-
-# [,1]         [,2]      [,3] [,4]
-# [1,] -0.7375854 -0.003207455 0.7343779 0.18
-# [2,] -0.5579100  0.122270456 0.6801805 0.54
-# [3,] -0.2943541  0.439127203 0.7334813 0.92
-# [4,] -0.1284847  0.688487285 0.8169720 0.68
-# [5,] -0.0310335  0.869890707 0.9009242 0.45

@@ -1,13 +1,12 @@
-# Approved
 library(MASS)
 library(emplik)
 library(kedd)
 
 ######### PARAMETERS########################
 
-n = 100  # Further increased sample size
+n = 200  # Further increased sample size
 rho = c(-0.9, -0.5, 0, 0.5, 0.9)
-iter = 100  # Increased iterations
+iter = 500  # Increased iterations
 
 ########Define Matrix of Results###################
 
