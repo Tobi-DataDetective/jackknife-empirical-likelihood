@@ -379,12 +379,14 @@ findci <- function(x.vector) {
   return(list(Up = U, Low = L))
 }
 
+
+
 for (distrib_idx in seq_along(distributions)) {
   distrib_name = distributions[[distrib_idx]]$name
   gen_U = distributions[[distrib_idx]]$gen_U
   mean_U2 = distributions[[distrib_idx]]$mean_U2
   mean_expU = distributions[[distrib_idx]]$mean_expU
-  
+
   distortion_functions = list(
     list(name = "Advanced_Linear",
          phi_X = function(U) 0.5 * U + log(2 / (exp(1) - exp(-1))),
